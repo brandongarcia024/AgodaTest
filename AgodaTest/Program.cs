@@ -4,20 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using core;
+using System.Text.RegularExpressions;
 
 
-    namespace AgodaTest
+
+namespace AgodaTest
     {
         class Program
         {
             static void Main(string[] args)
             {
-            string ErrorMessage = "";
             PasswordManager AgodaPasswordSystem = new PasswordManager();
-            AgodaPasswordSystem.ChangePassword("Sdfsdf", "asdasfAF@13#SD23!@" ,out ErrorMessage);
-            Console.WriteLine(ErrorMessage);
-            
-            
+            var x = AgodaPasswordSystem.ChangePassword("asd", "sdjfhsjkfh!@#!@#123123ASDASD");
+
+
+
+
+
 
 
 

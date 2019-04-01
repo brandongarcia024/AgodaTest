@@ -11,89 +11,78 @@ namespace core
 
     public class PasswordManager
     {
-        private const int MIN_LENGTH = 18;
-        private string oldPassword = ""; 
-        private string newPassword = "";
-        private int specialCharacterCount = 0;
-        private bool meetsLengthRequirements = false;
-        private bool meetsCharacterContentRequirements = false;
-        private bool hasWhiteSpaces = false;
-        private bool meetsSpecialCharCount = false;
+
+          public bool ChangePassword(string oldPassword, string newPassword)
+          {
+            if (newPassword == null || oldPassword == null) throw new ArgumentNullException();
+
+            if (!newPassword.Contains(" "))
+            {
+                var newPasswordIsValid = CheckNewPassword(newPassword);
+                var oldPasswordIsVerified = VerifyOldPassword(oldPassword);
+                var newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
+
+                if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
+            }
+            return false;
+          }
 
 
-        public void ChangePassword(string oldPassword, string newPassword, out string ErrorMessage)
+
+        /// <summary>
+        /// Checks the new password if it conforms to the required password strength requirements. Returns true if it does and false if it doesn't
+        /// </summary>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
+        private bool CheckNewPassword(string newPassword)
         {
+                //Define Regex
+                var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d!@#&*]{18,}$");
+                var hasNumber = new Regex(@"[0-9]");
+                var hasSymbols = new Regex(@"[!@#$&*]");
+                var hasConsecutiveDuplicates = new Regex(@"(.+)\1\1\1");
 
-            ErrorMessage = string.Empty;
-            if (newPassword == null) throw new ArgumentNullException();
-            if (newPassword.Contains(" "))
-            {
-                hasWhiteSpaces = true;
-            }
+                var symbols = hasSymbols.Matches(newPassword);
+                var numbers = hasNumber.Matches(newPassword);
 
-            meetsLengthRequirements = newPassword.Length >= 18;//Checks the length and makes sure that it doesn't go over 18 characters.
-
-            if (meetsLengthRequirements && !hasWhiteSpaces)
-            {
-                var hasLowerChar = new Regex(@"[a-z]+");//Match with a letter in lower case from a-z one or more times
-                var hasUpperChar = new Regex(@"[A-Z]+");//Match with a letter in upper case from A-Z one or more times
-                var hasNumber = new Regex(@"[0-9]+"); //Match with a number from 0-9 one or more times.
-                var hasSymbols = new Regex(@"[!@#$&*]+");//Match with a special character 1-4 times only
-
-                if (hasLowerChar.IsMatch(newPassword) && hasUpperChar.IsMatch(newPassword) && hasNumber.IsMatch(newPassword) && hasSymbols.IsMatch(newPassword))
+                if (hasCharacterRequirements.IsMatch(newPassword) &
+                    hasConsecutiveDuplicates.IsMatch(newPassword) &
+                    symbols.Count <= 4 &
+                    numbers.Count < newPassword.Length / 2)
                 {
-                    meetsCharacterContentRequirements = true;
+                    return true;
                 }
-            }
-
-            if (meetsLengthRequirements && meetsCharacterContentRequirements)
-            {
-                Dictionary<char, int> CharacterCount = new Dictionary<char, int>();
-                foreach(char c in newPassword)
+                else
                 {
-                    if(CharacterCount.ContainsKey(c))
-                    {
-                        CharacterCount[c]++;
-                    }
-                    else
-                    {
-                        CharacterCount.Add(c, 1);
-                    }
+                    return false;
                 }
                 
-
-                CharacterCount.TryGetValue()
-
-
-
-            }
-
-
-
-
+            
         }
 
-    
+        /// <summary>
+        /// Checks if the old password matches with the one in the database. Returns true if it is matched successfully and false if it doesn't
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
+        private bool VerifyOldPassword(string oldPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Checks if the new password is not similar to the old password (less than 80% match)
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
+        private bool ComparePasswords(string oldPassword, string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
-
 }
 
 
 
-              /* if (!hasLowerChar.IsMatch(newPassword))
-                {
-                    ErrorMessage = "Password should contain At least one lower case letter";
-                }
-                else if (!hasUpperChar.IsMatch(newPassword))
-                {
-                    ErrorMessage = "Password should contain At least one upper case letter";
-                }
-                else if (!hasNumber.IsMatch(newPassword))
-                {
-                    ErrorMessage = "Password should contain At least one numeric value";
-                }
-                else if (!hasSymbols.IsMatch(newPassword))
-                {
-                    ErrorMessage = "Password should contain At least one special case characters";
-                }*/
