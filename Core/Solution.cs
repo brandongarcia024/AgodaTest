@@ -1,40 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 
 namespace core
 {
-
     public class PasswordManager
     {
-
-          public bool ChangePassword(string oldPassword, string newPassword)
+          public bool ChangePassword(string oldPassword, string newPassword, bool mockIsVerified, bool mockCompared)
           {
-            if (newPassword == null || oldPassword == null) throw new ArgumentNullException();
+            if (newPassword == null || oldPassword == null) return false;
 
             if (!newPassword.Contains(" "))
             {
                 var newPasswordIsValid = CheckNewPassword(newPassword);
-                var oldPasswordIsVerified = VerifyOldPassword(oldPassword);
-                var newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-
+                var newPasswordIsUnique = mockCompared; // Passing in bool from mock in unit tests
+                var oldPasswordIsVerified = mockIsVerified; // Passing in bool from mock in unit tests
+                //  var newPasswordIsUnique = ComparePasswords(oldPassword, newPassword); - Once implemented, this will be used
+                //  var oldPasswordIsVerified = VerifyOldPassword(oldPassword); Once implemented, this will be used
+               
                 if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
             }
             return false;
           }
-
-
 
         /// <summary>
         /// Checks the new password if it conforms to the required password strength requirements. Returns true if it does and false if it doesn't
         /// </summary>
         /// <param name="newPassword"></param>
         /// <returns></returns>
-        private bool CheckNewPassword(string newPassword)
+        public bool CheckNewPassword(string newPassword)
         {
                 //Define Regex
                 var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d!@#&*]{18,}$");
@@ -45,9 +39,9 @@ namespace core
                 var symbols = hasSymbols.Matches(newPassword);
                 var numbers = hasNumber.Matches(newPassword);
 
-                if (hasCharacterRequirements.IsMatch(newPassword) &
-                    hasConsecutiveDuplicates.IsMatch(newPassword) &
-                    symbols.Count <= 4 &
+                if (hasCharacterRequirements.IsMatch(newPassword) &&
+                    !hasConsecutiveDuplicates.IsMatch(newPassword) &&
+                    symbols.Count <= 4 &&
                     numbers.Count < newPassword.Length / 2)
                 {
                     return true;
@@ -55,9 +49,7 @@ namespace core
                 else
                 {
                     return false;
-                }
-                
-            
+                }     
         }
 
         /// <summary>
@@ -65,7 +57,7 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        private bool VerifyOldPassword(string oldPassword)
+        public virtual bool VerifyOldPassword(string oldPassword)
         {
             throw new NotImplementedException();
         }
@@ -75,12 +67,10 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        private bool ComparePasswords(string oldPassword, string newPassword)
+        public virtual bool ComparePasswords(string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
 
