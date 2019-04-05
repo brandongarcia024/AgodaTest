@@ -79,7 +79,7 @@ namespace core
             }
         }
 
-        public virtual string GetPasswordFromDB(bool isMatch, string oldPassword)
+        public string GetPasswordFromDB(bool isMatch, string oldPassword)
         {
             if(isMatch)
             {
@@ -87,7 +87,7 @@ namespace core
             }
             else
             {
-                return "DifferentPassword1!";
+                return $"{oldPassword} + sdafd";
             }
         }
 
