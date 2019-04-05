@@ -46,12 +46,14 @@ Install the necessary NuGet Packages:
 Access the submitted solution and open in Visual Studio.
 ```
 ```
-The excel file containing the test data has been saved to this repository and is named TESTDATA_AGODA_PROJECT. 
+The excel file containing the test data has been saved to this repository and is named Test Data - Change Password.xlsx. 
 ```
 ```
 @"Provider=Microsoft.ACE.OLEDB.12.0; Data Source='D:\Brandon Garcia\Documents\Test Data - Change Password.xlsx'; Extended Properties='Excel 12.0;HDR=YES;'", "Sheet1$"
 
-Change the data source to the path where you saved the test data spreadsheet. Depending on your version of Excel you may need to edit the 12.0 part above to the version of excel you're using. (12.0 is for excel 2010 - the version information can be readily searched through Google).
+Change the data source to the path where you saved the test data spreadsheet. 
+Depending on your version of Excel you may need to edit the 12.0 part above to the version of excel you're using. 
+(12.0 is for excel 2010 - the version information can be readily searched through Google).
 ```
 
 
