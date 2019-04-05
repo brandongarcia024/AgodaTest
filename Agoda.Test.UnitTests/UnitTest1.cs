@@ -22,7 +22,7 @@ namespace Agoda.Test.UnitTests
         bool passwordChanged;
 
 
-        [DataSource(@"Provider=Microsoft.ACE.OLEDB.12.0; Data Source='D:\Brandon Garcia\Documents\Test Data - Change Password.xlsx'; Extended Properties='Excel 12.0;HDR=YES;IMEX=1;'", "Sheet1$")]
+        [DataSource(@"Provider=Microsoft.ACE.OLEDB.12.0; Data Source='D:\Brandon Garcia\Documents\Test Data - Change Password.xlsx'; Extended Properties='Excel 12.0;HDR=YES;'", "Sheet1$")]
         [TestMethod()]
         public void ChangePassword__RequirementValidationTests()
         {

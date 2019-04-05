@@ -29,20 +29,29 @@ namespace core
         public static bool CheckNewPassword(string newPassword)
         {
             //Define Regex
-            var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d!@#&*]{18,}$");
+            var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*])[A-Za-z\d!@#$&*]{18,}$");
             var hasNumber = new Regex(@"[0-9]");
             var hasSymbols = new Regex(@"[!@#$&*]");
             var hasConsecutiveDuplicates = new Regex(@"(.)\1{4,}");
+            bool numberIsMinor;
+            bool _hasCharacterRequirements = hasCharacterRequirements.IsMatch(newPassword);
+            bool _hasConsecutiiveDuplicates = hasConsecutiveDuplicates.IsMatch(newPassword);
 
             var symbols = hasSymbols.Matches(newPassword);
             var numbers = hasNumber.Matches(newPassword);
-
-            var x = hasConsecutiveDuplicates.IsMatch(newPassword);
-            var y = hasCharacterRequirements.IsMatch(newPassword);
-            if (hasCharacterRequirements.IsMatch(newPassword) &&
-                !hasConsecutiveDuplicates.IsMatch(newPassword) &&
+            if (newPassword.Length % 2 == 1)
+            {
+                 numberIsMinor = numbers.Count <= newPassword.Length / 2;
+            }
+            else
+            {
+                numberIsMinor = numbers.Count < newPassword.Length / 2;
+            }
+            
+            if (_hasCharacterRequirements &&
+                !_hasConsecutiiveDuplicates &&
                 symbols.Count <= 4 &&
-                numbers.Count <= newPassword.Length / 2)
+                numberIsMinor)
             {
                 return true;
             }
