@@ -1,32 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
-
-namespace core
+namespace Core
 {
-    public class PasswordManager
+    public class PasswordValidator
     {
-          public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
-          {
-            if (newPassword == null || oldPassword == null) return false;
-
-            if (!newPassword.Contains(" "))
-            {
-                var newPasswordIsValid = CheckNewPassword(newPassword);
-                var newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-                var oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
-               
-                if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
-            }
-            return false;
-          }
-
         /// <summary>
         /// Checks the new password if it conforms to the required password strength requirements. Returns true if it does and false if it doesn't
         /// </summary>
         /// <param name="newPassword"></param>
         /// <returns></returns>
-        public static bool CheckNewPassword(string newPassword)
+        public bool CheckNewPassword(string newPassword)
         {
             //Define Regex
             var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d!@#&*]{18,}$");
@@ -55,29 +41,9 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        public bool VerifyOldPassword(string oldPassword, bool isMatch)
+        public static bool VerifyOldPassword(string oldPassword)
         {
-            var oldPasswordDB = GetPasswordFromDB(isMatch,oldPassword);
-            if (oldPassword == oldPasswordDB)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public virtual string GetPasswordFromDB(bool isMatch, string oldPassword)
-        {
-            if(isMatch)
-            {
-                return oldPassword;
-            }
-            else
-            {
-                return "DifferentPassword1!";
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -85,11 +51,11 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        public bool ComparePasswords(string oldPassword, string newPassword)
+        public static bool ComparePasswords(string oldPassword, string newPassword)
         {
             var levenshteinDistance = LevenshteinDistance(oldPassword, newPassword);
-            var similarity = CalculateSimilarity(oldPassword, newPassword);
-            if (similarity >= 0.8)
+            var similarity = CalculateSimilarity(levenshteinDistance);
+            if (similarity >= 80)
             {
                 return false;
             }
@@ -97,18 +63,19 @@ namespace core
             {
                 return true;
             }
+            
         }
 
-        public int LevenshteinDistance(string source, string target)
+        public static int LevenshteinDistance(string oldPassword, string newPassword)
         {
-            // Basic cases
-            if (source == target) return 0;
-            if (source.Length == 0) return target.Length;
-            if (target.Length == 0) return source.Length;
+            //Basic Cases
+            if (oldPassword == newPassword) return 0;
+            if (oldPassword.Length == 0) return newPassword.Length;
+            if (newPassword.Length == 0) return oldPassword.Length;
 
             // create two work vectors of integer distances
-            int[] v0 = new int[target.Length + 1];
-            int[] v1 = new int[target.Length + 1];
+            int[] v0 = new int[newPassword.Length + 1];
+            int[] v1 = new int[newPassword.Length + 1];
 
             // initialize v0 (the previous row of distances)
             // this row is A[0][i]: edit distance for an empty s
@@ -135,12 +102,11 @@ namespace core
                 for (int j = 0; j < v0.Length; j++)
                     v0[j] = v1[j];
             }
-
+            //Number of operations needed to transform old to new.
             return v1[target.Length];
-            
         }
 
-        public double CalculateSimilarity(string source, string target)
+        public static double CalculateSimilarity(string source, string target)
         {
             if ((source == null) || (target == null)) return 0.0;
             if ((source.Length == 0) || (target.Length == 0)) return 0.0;
@@ -151,6 +117,3 @@ namespace core
         }
     }
 }
-
-
-
