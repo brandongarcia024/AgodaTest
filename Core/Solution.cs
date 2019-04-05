@@ -32,15 +32,17 @@ namespace core
             var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d!@#&*]{18,}$");
             var hasNumber = new Regex(@"[0-9]");
             var hasSymbols = new Regex(@"[!@#$&*]");
-            var hasConsecutiveDuplicates = new Regex(@"(.+)\1\1\1");
+            var hasConsecutiveDuplicates = new Regex(@"(.)\1{4,}");
 
             var symbols = hasSymbols.Matches(newPassword);
             var numbers = hasNumber.Matches(newPassword);
 
+            var x = hasConsecutiveDuplicates.IsMatch(newPassword);
+            var y = hasCharacterRequirements.IsMatch(newPassword);
             if (hasCharacterRequirements.IsMatch(newPassword) &&
                 !hasConsecutiveDuplicates.IsMatch(newPassword) &&
                 symbols.Count <= 4 &&
-                numbers.Count < newPassword.Length / 2)
+                numbers.Count <= newPassword.Length / 2)
             {
                 return true;
             }
@@ -121,7 +123,7 @@ namespace core
                 // calculate v1 (current row distances) from the previous row v0
 
                 // first element of v1 is A[i+1][0]
-                //   edit distance is delete (i+1) chars from s to match empty t
+                // edit distance is delete (i+1) chars from s to match empty t
                 v1[0] = i + 1;
 
                 // use formula to fill in the rest of the row
