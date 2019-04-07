@@ -11,23 +11,30 @@ namespace core
         public bool oldPasswordIsVerified = false;
         private const int MAX_SYMBOL_COUNT = 4;
     
-          public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
-          {
-            if (newPassword == null || oldPassword == null) return false;
+        /// <summary>
+        /// Checks if a given old password can be changed to the new password. Returns true if all conditions specified in the requirement are met.
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="isMatch"></param>
+        /// <returns></returns>
+        public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
+        {
+        if (newPassword == null || oldPassword == null) return false;
 
-            if (!newPassword.Contains(" "))
-            {
-                newPasswordIsValid = CheckNewPassword(newPassword);
-                newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-                oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
+        if (!newPassword.Contains(" "))
+        {
+            newPasswordIsValid = CheckNewPassword(newPassword);
+            newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
+            oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
                
-                if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
-            }
-            return false;
-          }
+            if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
+        }
+        return false;
+        }
 
         /// <summary>
-        /// Checks the new password if it conforms to the required password strength requirements. Returns true if it does and false if it doesn't
+        /// Checks the new password if it conforms to the required password strength requirements. Returns true if it does and false if it doesn't.
         /// </summary>
         /// <param name="newPassword"></param>
         /// <returns></returns>
@@ -83,7 +90,12 @@ namespace core
                 return false;
             }
         }
-
+        /// <summary>
+        /// This is a mock function that simulates a call to the DB. It depends on the isMatch bool. If isMatch is true, then it returns the oldPassword. Else, it returns a different string.
+        /// </summary>
+        /// <param name="isMatch"></param>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
         private string GetPasswordFromDB(bool isMatch, string oldPassword)
         {
             if(isMatch)
@@ -97,13 +109,13 @@ namespace core
         }
 
         /// <summary>
-        /// Checks if the new password is not similar to the old password (less than 80% match)
+        /// Checks if the new password is not similar to the old password (less than 80% match). 
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
         private bool ComparePasswords(string oldPassword, string newPassword)
         {
-            var levenshteinDistance = LevenshteinDistance(oldPassword, newPassword);
+            var levenshteinDistance = CalculateLevenshteinDistance(oldPassword, newPassword);
             var similarity = CalculateSimilarity(oldPassword, newPassword);
             if (similarity >= 0.8)
             {
@@ -115,7 +127,13 @@ namespace core
             }
         }
 
-        private int LevenshteinDistance(string source, string target)
+        /// <summary>
+        /// Calculates the minimum number of single-character edits (insertions, deletions or substitutions) required to change one word into the other. 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private int CalculateLevenshteinDistance(string source, string target)
         {
             // Basic cases
             if (source == target) return 0;
@@ -155,13 +173,19 @@ namespace core
             return v1[target.Length];           
         }
 
+        /// <summary>
+        /// Calculates the similarity between two strings using the Levenshtein Distance. Returns a value from 0 to 1. 1 being completely identical.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         private double CalculateSimilarity(string source, string target)
         {
             if ((source == null) || (target == null)) return 0.0;
             if ((source.Length == 0) || (target.Length == 0)) return 0.0;
             if (source == target) return 1.0;
 
-            int stepsToSame = LevenshteinDistance(source, target);
+            int stepsToSame = CalculateLevenshteinDistance(source, target);
             return (1.0 - ((double)stepsToSame / (double)Math.Max(source.Length, target.Length)));
         }
     }
