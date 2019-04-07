@@ -79,6 +79,8 @@ For this project. I've implemented the password similarity checker as requested.
 
 If isMatch == True, then GetPasswordFromDB acts to make sure that the old password matches with the "DB". Else, GetPasswordFromDB makes sure that they are different, hence failing one requirement and thus making ChangePassword return false.
 
+Lastly, the three variables (bools) for the three requirements have been exposed, along with the change password function. The rest are set to private to encapsulate the implementation.
+
 ## Test Case Summary:
 
 -New password is null
@@ -144,6 +146,8 @@ If isMatch == True, then GetPasswordFromDB acts to make sure that the old passwo
 For this project, I've assumed that passwords with whitespaces should be rejected right from the start.
 
 For the matching the old password with the DB, we won't be validating the old password since the assumption is that it was valid at the time the user set it up in the past.
+
 We want the user to match the passwords directly to confirm that he is the rightful owner but then enforce the new validations once he/she sets the new password.
 
+I used the Levenshtein Distance as the measurement in similarity between strings. I thought it would be most appropriate as it is the minimum number of single-character edits (insertions, deletions or substitutions) required to change one word into the other.
 
