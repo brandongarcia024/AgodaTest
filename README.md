@@ -79,7 +79,7 @@ For this project. I've implemented the password similarity checker as requested.
 
 If isMatch == True, then GetPasswordFromDB acts to make sure that the old password matches with the "DB". Else, GetPasswordFromDB makes sure that they are different, hence failing one requirement and thus making ChangePassword return false.
 
-Lastly, the three variables (bools) for the three requirements have been exposed, along with the change password function. The rest are set to private to encapsulate the implementation.
+Lastly, three properties corresponding to the three requirements have been exposed (ReadOnly), along with the change password function. The rest are set to private to encapsulate the implementation.
 
 ## Test Case Summary:
 
