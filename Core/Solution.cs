@@ -6,9 +6,10 @@ namespace core
 {
     public class PasswordManager
     {
-        public bool newPasswordIsValid = false;
-        public bool newPasswordIsUnique = false;
-        public bool oldPasswordIsVerified = false;
+        
+        public bool NewPasswordIsValid { get; private set; } //This is set to true if the new password meets the conditions specified in the requirement.
+        public bool NewPasswordIsUnique { get; private set; }//This is set to true if the new password is less than 80% similar to the old password.
+        public bool OldPasswordIsVerified { get; private set; }//This is set to true if the old password matches the one in the database.
         private const int MAX_SYMBOL_COUNT = 4;
     
         /// <summary>
@@ -24,11 +25,11 @@ namespace core
 
         if (!newPassword.Contains(" "))
         {
-            newPasswordIsValid = CheckNewPassword(newPassword);
-            newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-            oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
+            NewPasswordIsValid = CheckNewPassword(newPassword);
+            NewPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
+            OldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
                
-            if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
+            if (NewPasswordIsValid && NewPasswordIsUnique && OldPasswordIsVerified) return true;
         }
         return false;
         }
