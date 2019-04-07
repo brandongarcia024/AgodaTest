@@ -6,15 +6,20 @@ namespace core
 {
     public class PasswordManager
     {
+        public bool newPasswordIsValid = false;
+        public bool newPasswordIsUnique = false;
+        public bool oldPasswordIsVerified = false;
+        private const int MAX_SYMBOL_COUNT = 4;
+    
           public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
           {
             if (newPassword == null || oldPassword == null) return false;
 
             if (!newPassword.Contains(" "))
             {
-                var newPasswordIsValid = CheckNewPassword(newPassword);
-                var newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-                var oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
+                newPasswordIsValid = CheckNewPassword(newPassword);
+                newPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
+                oldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
                
                 if (newPasswordIsValid && oldPasswordIsVerified && newPasswordIsUnique) return true;
             }
@@ -26,7 +31,7 @@ namespace core
         /// </summary>
         /// <param name="newPassword"></param>
         /// <returns></returns>
-        public static bool CheckNewPassword(string newPassword)
+        private static bool CheckNewPassword(string newPassword)
         {
             //Define Regex
             var hasCharacterRequirements = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*])[A-Za-z\d!@#$&*]{18,}$");
@@ -50,7 +55,7 @@ namespace core
             
             if (_hasCharacterRequirements &&
                 !_hasConsecutiiveDuplicates &&
-                symbols.Count <= 4 &&
+                symbols.Count <= MAX_SYMBOL_COUNT &&
                 numberIsMinor)
             {
                 return true;
@@ -66,7 +71,7 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        public bool VerifyOldPassword(string oldPassword, bool isMatch)
+        private bool VerifyOldPassword(string oldPassword, bool isMatch)
         {
             var oldPasswordDB = GetPasswordFromDB(isMatch,oldPassword);
             if (oldPassword == oldPasswordDB)
@@ -79,7 +84,7 @@ namespace core
             }
         }
 
-        public string GetPasswordFromDB(bool isMatch, string oldPassword)
+        private string GetPasswordFromDB(bool isMatch, string oldPassword)
         {
             if(isMatch)
             {
@@ -96,7 +101,7 @@ namespace core
         /// </summary>
         /// <param name="oldPassword"></param>
         /// <returns></returns>
-        public bool ComparePasswords(string oldPassword, string newPassword)
+        private bool ComparePasswords(string oldPassword, string newPassword)
         {
             var levenshteinDistance = LevenshteinDistance(oldPassword, newPassword);
             var similarity = CalculateSimilarity(oldPassword, newPassword);
@@ -110,7 +115,7 @@ namespace core
             }
         }
 
-        public int LevenshteinDistance(string source, string target)
+        private int LevenshteinDistance(string source, string target)
         {
             // Basic cases
             if (source == target) return 0;
@@ -147,11 +152,10 @@ namespace core
                     v0[j] = v1[j];
             }
 
-            return v1[target.Length];
-            
+            return v1[target.Length];           
         }
 
-        public double CalculateSimilarity(string source, string target)
+        private double CalculateSimilarity(string source, string target)
         {
             if ((source == null) || (target == null)) return 0.0;
             if ((source.Length == 0) || (target.Length == 0)) return 0.0;

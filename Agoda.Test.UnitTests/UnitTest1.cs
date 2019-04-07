@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using core;
 using System;
 
@@ -20,7 +19,6 @@ namespace Agoda.Test.UnitTests
         string newPassword;
         bool isMatch;
         bool passwordChanged;
-
 
         [DataSource(@"Provider=Microsoft.ACE.OLEDB.12.0; Data Source='D:\Brandon Garcia\Documents\Test Data - Change Password.xlsx'; Extended Properties='Excel 12.0;HDR=YES;'", "Sheet1$")]
         [TestMethod()]
