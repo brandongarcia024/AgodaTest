@@ -146,7 +146,7 @@ Lastly, three properties corresponding to the three requirements have been expos
 
 
 ## Peculiar Cases
-For this project, I've assumed that passwords with whitespaces should be rejected right from the start.
+For this project, I've assumed that passwords with whitespaces/null values should be rejected right from the start. The passwords do not go through any validation in those cases. They are simply rejected.
 
 For the matching the old password with the DB, we won't be validating the old password since the assumption is that it was valid at the time the user set it up in the past.
 
