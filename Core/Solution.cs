@@ -21,24 +21,26 @@ namespace core
         /// <returns></returns>
         public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
         {
-        if (newPassword == null || oldPassword == null)
-		{
-			NewPasswordIsValid = false;
+
+            NewPasswordIsValid = false;
             NewPasswordIsUnique = false;
             OldPasswordIsVerified = false;
 
-			return false;
-		}
+            if (newPassword == null || oldPassword == null)
+		    {
+			    return false;
+		    }
 
         if (!newPassword.Contains(" "))
-        {
-            NewPasswordIsValid = CheckNewPassword(newPassword);
-            NewPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
-            OldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
+            {
+                NewPasswordIsValid = CheckNewPassword(newPassword);
+                NewPasswordIsUnique = ComparePasswords(oldPassword, newPassword);
+                OldPasswordIsVerified = VerifyOldPassword(oldPassword, isMatch);
                
-            if (NewPasswordIsValid && NewPasswordIsUnique && OldPasswordIsVerified) return true;
-        }
-        return false;
+                if (NewPasswordIsValid && NewPasswordIsUnique && OldPasswordIsVerified) return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace core
             }
             else
             {
-                return $"{oldPassword} + sdafd";
+                return $"{oldPassword} + sdafd";// Makes sure that we return a value different from oldPassword
             }
         }
 
