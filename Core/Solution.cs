@@ -21,7 +21,14 @@ namespace core
         /// <returns></returns>
         public bool ChangePassword(string oldPassword, string newPassword, bool isMatch)
         {
-        if (newPassword == null || oldPassword == null) return false;
+        if (newPassword == null || oldPassword == null)
+		{
+			NewPasswordIsValid = false;
+            NewPasswordIsUnique = false;
+            OldPasswordIsVerified = false;
+
+			return false;
+		}
 
         if (!newPassword.Contains(" "))
         {
