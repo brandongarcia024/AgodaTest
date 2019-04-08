@@ -65,6 +65,9 @@ the data import may arise. These problems will only be because of the syntax of 
 
 ## Implementation Summary
 
+Solution.cs (Agoda Test > Core) contains the PasswordManager class in which the ChangePassword method, and all related methods, are defined
+UnitTest1.cs (Agoda Test > Agoda.Test.UnitTests) contains the unit tests.
+
 Basically, the ChangePassword function returns a boolean (true = password is changed, false = password is unchanged due to incorrect input) and depends on the following:
 - The oldPassword and newPassword fields should not be null
 - The passwords should not contain any white spaces** (Peculiar case #1)
